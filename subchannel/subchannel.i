@@ -1,13 +1,24 @@
 !include ../common.i
 
-mass_flux_in = 10
+# compute the inlet mass flux required to get a bulk temperature rise of 160 K,
+# for the imposed power of ${power}. We evaluate the specific heat at the average
+# of the inlet and outlet temperatures using a correlation.
+temperature = ${fparse 0.5 * (outlet_temperature + inlet_temperature)}
+dt = ${fparse 2503.3 - temperature}
+Cp = ${fparse 7.3898e5 / dt / dt + 3.154e5 / dt + 1.1340e3 + -2.2153e-1 * dt + 1.1156e-4 * dt * dt}
+total_mdot = ${fparse power / Cp / (outlet_temperature - inlet_temperature)}
+
+# compute the mass flux by dividing the mass flowrate by the flow area
+flow_area = ${fparse sqrt(3)/2 * (duct_inner_flat_to_flat*1e-2)^2 - 61*pi*(outer_clad_diameter*1e-2)^2/4}
+
+mass_flux_in = ${fparse total_mdot / flow_area}
 
 [TriSubChannelMesh]
   [subchannel]
     type = SCMTriSubChannelMeshGenerator
     nrings = 5
     n_cells = 100
-    flat_to_flat = ${fparse duct_inner_flat_to_flat * 1e-2/2}
+    flat_to_flat = ${fparse duct_inner_flat_to_flat * 1e-2}
     heated_length = ${fparse height * 1e-2}
     pin_diameter = ${fparse outer_clad_diameter * 1e-2}
     pitch = ${fparse pin_pitch * 1e-2}
@@ -24,12 +35,6 @@ mass_flux_in = 10
     hwire = ${fparse wire_pitch * 1e-2}
     heated_length = ${fparse height * 1e-2}
     pitch = ${fparse pin_pitch * 1e-2}
-  []
-  [rotate]
-    type = TransformGenerator
-    input = fuel_pins
-    transform = rotate
-    vector_value = '30.0 0.0 0.0'
   []
 []
 
@@ -102,6 +107,8 @@ mass_flux_in = 10
   segregated = false
   staggered_pressure = false
   monolithic_thermal = false
+  P_tol = 1.0e-5
+  T_tol = 1.0e-5
 []
 
 [ICs]
@@ -121,7 +128,7 @@ mass_flux_in = 10
   [q_prime_IC]
     type = ConstantIC
     variable = q_prime_const
-    value = 10000 # TODO
+    value = ${fparse power/61/(height*1e-2)}
   []
   [T_ic]
     type = ConstantIC
@@ -195,21 +202,19 @@ mass_flux_in = 10
   []
 []
 
-# Add postprocessors to check that energy is conserved; when this file runs standalone,
-# we are applying a heat flux to the guide tubes and instrument tubes as well
 [Postprocessors]
-  [power] # matches expectations
+  [power]
     type = SCMPowerPostprocessor
   []
   [inlet_temp]
     type = SCMPlanarMean
     variable = T
-    height = ${fparse height * 1e-2}
+    height = 0.0
   []
   [outlet_temp]
     type = SCMPlanarMean
     variable = T
-    height = 0.0
+    height = ${fparse height * 1e-2}
   []
 []
 
@@ -233,6 +238,6 @@ mass_flux_in = 10
   [transfer]
     type = SCMSolutionTransfer
     to_multi_app = viz
-    variable = 'mdot P T'
+    variable = 'mdot P T rho S'
   []
 []
