@@ -5,27 +5,21 @@
   []
 []
 
-#[ICs]
-#  [temperature]
-#    type = ConstantIC
-#    variable = temp
-#    value = 600
-#  []
-#[]
-
 [Problem]
   type = OpenMCCellAverageProblem
   power = ${fparse 65e6 / 79}
   lowest_cell_level = 2
- # temperature_blocks = '1 2 3 1000 1001 1002'
   scaling = 100
   verbose = true
+  normalize_by_global_tally = false
 
   [Tallies]
     [power]
       type = CellTally
-      block = '1'
       score = 'kappa_fission'
+
+      #type = MeshTally
+      #mesh_template = '../meshes/solid_in.e'
     []
   []
 []

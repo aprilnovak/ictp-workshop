@@ -7,9 +7,9 @@ pin_pitch = 0.695
 inner_clad_diameter = 0.540
 outer_clad_diameter = 0.6
 height = 45.0
+assembly_pitch = 6.1
+duct_inner_flat_to_flat = 5.66
+duct_outer_flat_to_flat = 5.9
 
-# TODO
-duct_inner_flat_to_flat = 10.0
-duct_outer_flat_to_flat = 12.0
 
-n_layers = 10
+n_layers = 2

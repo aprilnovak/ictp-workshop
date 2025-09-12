@@ -211,5 +211,5 @@ xz_cell.color_by = 'cell'
 
 model.plots = openmc.Plots([xy, xz, xy_cell, xz_cell])
 
-model.export_to_xml()
+model.export_to_model_xml()
 
