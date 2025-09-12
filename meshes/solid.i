@@ -1,0 +1,43 @@
+!include ../common.i
+
+[Mesh]
+  [pin]
+    type = PolygonConcentricCircleMeshGenerator
+    num_sides = 6
+    ring_radii = '${fparse 1e-2*hole_diameter/2} ${fparse 1e-2*pellet_diameter/2} ${fparse 1e-2*inner_clad_diameter/2} ${fparse 1e-2*outer_clad_diameter/2}'
+    ring_intervals = '1 1 1 1'
+    num_sectors_per_side = '4 4 4 4 4 4'
+    polygon_size = ${fparse 0.5 * pin_pitch * 1e-2}
+
+    ring_block_ids = '0 1 0 2'
+
+    background_block_ids = '3'
+
+    quad_center_elements = true
+    create_outward_interface_boundaries = false
+  []
+  [assembly]
+    type = PatternedHexMeshGenerator
+    inputs = 'pin'
+    pattern = '0 0 0 0 0;
+              0 0 0 0 0 0;
+             0 0 0 0 0 0 0;
+            0 0 0 0 0 0 0 0;
+           0 0 0 0 0 0 0 0 0;
+            0 0 0 0 0 0 0 0;
+             0 0 0 0 0 0 0;
+              0 0 0 0 0 0;
+               0 0 0 0 0'
+    hexagon_size = 10
+    duct_sizes = '${fparse duct_inner_flat_to_flat * 1e-2/2} ${fparse duct_outer_flat_to_flat*1e-2/2}'
+    duct_intervals = '1 1'
+    #duct_sizes_style = 'apothem'
+    #duct_block_ids = '${b_spacer_inc} ${b_spacer_zr}'
+
+    flat_side_up = false # TODO: fix
+  []
+  [delete_helium]
+    type = BlockDeletionGenerator
+    input = assembly
+  []
+[]
