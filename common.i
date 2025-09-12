@@ -11,5 +11,5 @@ assembly_pitch = 6.1
 duct_inner_flat_to_flat = 5.66
 duct_outer_flat_to_flat = 5.9
 
-
-n_layers = 2
+# number of axial layers to subdivide the geometry into
+n_layers = 10
