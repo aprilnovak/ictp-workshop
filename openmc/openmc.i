@@ -7,7 +7,7 @@
 
 [Problem]
   type = OpenMCCellAverageProblem
-  power = ${fparse 65e6 / 79}
+  power = ${power}
   lowest_cell_level = 2
   scaling = 100
   verbose = true

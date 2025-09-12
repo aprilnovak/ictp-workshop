@@ -115,9 +115,9 @@ clad_inner_surface  = openmc.ZCylinder(x0=0, y0=0, r=specs.inner_clad_diameter/2
 clad_outer_surface  = openmc.ZCylinder(x0=0, y0=0, r=specs.outer_clad_diameter/2.0)
 
 # Define the surfaces needed for the various hexagons enclosing the assembly
-hex_WR_IN    = openmc.model.HexagonalPrism(orientation='y', origin=(0.0, 0.0), edge_length=specs.duct_inner_flat_to_flat/math.sqrt(3))
-hex_WR_OU    = openmc.model.HexagonalPrism(orientation='y', origin=(0.0, 0.0), edge_length=specs.duct_outer_flat_to_flat/math.sqrt(3.))
-hex_SA_PITCH = openmc.model.HexagonalPrism(orientation='y', origin=(0.0, 0.0), edge_length=specs.assembly_pitch/math.sqrt(3.), boundary_type='reflective')
+hex_WR_IN    = openmc.model.HexagonalPrism(orientation='x', origin=(0.0, 0.0), edge_length=specs.duct_inner_flat_to_flat/math.sqrt(3))
+hex_WR_OU    = openmc.model.HexagonalPrism(orientation='x', origin=(0.0, 0.0), edge_length=specs.duct_outer_flat_to_flat/math.sqrt(3.))
+hex_SA_PITCH = openmc.model.HexagonalPrism(orientation='x', origin=(0.0, 0.0), edge_length=specs.assembly_pitch/math.sqrt(3.), boundary_type='reflective')
 
 # define axial surfaces which will bound the active fissile region
 lower = openmc.ZPlane(z0=0.0, boundary_type='vacuum')
@@ -138,6 +138,7 @@ sodium_universe = openmc.Universe(cells=[openmc.Cell(fill=sodium)])
 # create a lattice for a fuel assembly, consisting of 61 fuel pins
 axial_pitch = specs.height / specs.n_layers
 fuel_pin_lattice = openmc.HexLattice()
+fuel_pin_lattice.orientation = 'x'
 fuel_pin_lattice.center = [0., 0., specs.height/2]
 fuel_pin_lattice.pitch  = [specs.pin_pitch, axial_pitch]
 

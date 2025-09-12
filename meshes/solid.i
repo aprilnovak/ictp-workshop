@@ -12,7 +12,6 @@
     ring_block_ids = '0 1 0 2'
     background_block_ids = '3'
     quad_center_elements = true
-    #create_outward_interface_boundaries = false
   []
   [assembly]
     type = PatternedHexMeshGenerator
@@ -31,7 +30,6 @@
     duct_intervals = '1 1'
     duct_sizes_style = 'apothem'
     #duct_block_ids = '${b_spacer_inc} ${b_spacer_zr}'
-    rotate_angle = 30
     uniform_mesh_on_sides = true
   []
   [extrude]
