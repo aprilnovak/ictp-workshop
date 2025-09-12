@@ -30,9 +30,6 @@ mass_flux_in = ${fparse total_mdot / flow_area}
     input = subchannel
     nrings = 5
     n_cells = 100
-    pin_diameter = ${fparse outer_clad_diameter * 1e-2}
-    dwire = ${fparse wire_diameter * 1e-2}
-    hwire = ${fparse wire_pitch * 1e-2}
     heated_length = ${fparse height * 1e-2}
     pitch = ${fparse pin_pitch * 1e-2}
   []
@@ -47,6 +44,7 @@ mass_flux_in = ${fparse total_mdot / flow_area}
   []
   [P]
     block = subchannel
+    initial_condition = ${P_out}
   []
   [DP]
     block = subchannel
@@ -56,6 +54,7 @@ mass_flux_in = ${fparse total_mdot / flow_area}
   []
   [T]
     block = subchannel
+    initial_condition = 500
   []
   [rho]
     block = subchannel
@@ -71,12 +70,15 @@ mass_flux_in = ${fparse total_mdot / flow_area}
   []
   [Tpin]
     block = fuel_pins
+    initial_condition = ${inlet_temperature}
   []
   [q_prime]
     block = fuel_pins
+    initial_condition = ${fparse power/61/(height*1e-2)}
   []
   [Dpin]
     block = fuel_pins
+    initial_condition = ${fparse 1e-2 * outer_clad_diameter}
   []
   [displacement]
     block = fuel_pins
@@ -85,6 +87,7 @@ mass_flux_in = ${fparse total_mdot / flow_area}
     family = monomial
     order = constant
     block = fuel_pins
+    initial_condition = ${fparse power/61/(height*1e-2)}
   []
 []
 
@@ -112,11 +115,6 @@ mass_flux_in = ${fparse total_mdot / flow_area}
 []
 
 [ICs]
-  [Dpin_ic]
-    type = ConstantIC
-    variable = Dpin
-    value = ${fparse 1e-2 * outer_clad_diameter}
-  []
   [S_IC]
     type = SCMTriFlowAreaIC
     variable = S
@@ -124,26 +122,6 @@ mass_flux_in = ${fparse total_mdot / flow_area}
   [w_perim_IC]
     type = SCMTriWettedPerimIC
     variable = w_perim
-  []
-  [q_prime_IC]
-    type = ConstantIC
-    variable = q_prime_const
-    value = ${fparse power/61/(height*1e-2)}
-  []
-  [T_ic]
-    type = ConstantIC
-    variable = T
-    value = 500
-  []
-  [P_ic]
-    type = ConstantIC
-    variable = P
-    value = 0.0
-  []
-  [DP_ic]
-    type = ConstantIC
-    variable = DP
-    value = 0.0
   []
   [Viscosity_ic]
     type = ViscosityIC
@@ -165,16 +143,6 @@ mass_flux_in = ${fparse total_mdot / flow_area}
     p = ${P_out}
     T = T
     fp = sodium
-  []
-  [mdot_ic]
-    type = ConstantIC
-    variable = mdot
-    value = 0.0
-  []
-  [Tpin_ic]
-    type = ConstantIC
-    variable = Tpin
-    value = 560
   []
 []
 
