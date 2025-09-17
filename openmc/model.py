@@ -149,7 +149,6 @@ for i in range(specs.n_layers):
 
 fuel_pin_lattice.universes = axial
 
-
 # put that fuel pin lattice inside a hexagon boundary, then add additional hexagons
 # to represent the duct. For each, place inside the axial extents
 layer = +lower & -upper
@@ -170,6 +169,8 @@ model.settings.inactive  = 20
 model.settings.particles = 1000
 model.settings.ptables   = True
 model.settings.temperature['method']='interpolation'
+model.settings.temperature['range'] = (300.0, 3000.0)
+model.settings.temperature['default'] = 0.5 * (specs.inlet_temperature + specs.outlet_temperature)
 
 # Create an initial uniform spatial source distribution over fissionable zones
 l = specs.assembly_pitch

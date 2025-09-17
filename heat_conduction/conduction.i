@@ -63,7 +63,7 @@
     family = MONOMIAL
     order = CONSTANT
     initial_condition = 0.0
-    block = '1'
+    block = 'fuel'
   []
 []
 
@@ -81,7 +81,7 @@
     type = SpatialUserObjectAux
     variable = q_prime
     user_object = q_prime_uo
-    block = '1'
+    block = 'fuel'
   []
 []
 
@@ -89,7 +89,7 @@
   [q_prime_uo]
     type = NearestPointLayeredIntegral
     variable = heat_source
-    block = '1'
+    block = 'fuel'
     direction = z
     points_file = '../pin_centers.txt'
     num_layers = ${n_layers}

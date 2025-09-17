@@ -83,35 +83,6 @@ mass_flux_in = ${fparse total_mdot / flow_area}
   [displacement]
     block = fuel_pins
   []
-  [q_prime_const]
-    family = monomial
-    order = constant
-    block = fuel_pins
-    initial_condition = ${fparse power/61/(height*1e-2)}
-  []
-[]
-
-[FluidProperties]
-  [sodium]
-    type = PBSodiumFluidProperties
-  []
-[]
-
-[Problem]
-  type = TriSubChannel1PhaseProblem
-  fp = sodium
-  n_blocks = 1
-  P_out = ${P_out}
-  CT = 1.0
-  compute_density = true
-  compute_viscosity = true
-  compute_power = true
-  implicit = true
-  segregated = false
-  staggered_pressure = false
-  monolithic_thermal = false
-  P_tol = 1.0e-5
-  T_tol = 1.0e-5
 []
 
 [ICs]
@@ -146,6 +117,29 @@ mass_flux_in = ${fparse total_mdot / flow_area}
   []
 []
 
+[FluidProperties]
+  [sodium]
+    type = PBSodiumFluidProperties
+  []
+[]
+
+[Problem]
+  type = TriSubChannel1PhaseProblem
+  fp = sodium
+  n_blocks = 1
+  P_out = ${P_out}
+  CT = 1.0
+  compute_density = true
+  compute_viscosity = true
+  compute_power = true
+  implicit = true
+  segregated = false
+  staggered_pressure = false
+  monolithic_thermal = false
+  P_tol = 1.0e-5
+  T_tol = 1.0e-5
+[]
+
 [AuxKernels]
   [T_in_bc]
     type = ConstantAux
@@ -162,12 +156,6 @@ mass_flux_in = ${fparse total_mdot / flow_area}
     mass_flux = ${mass_flux_in}
     execute_on = 'timestep_begin'
   []
-  [q_prime_ak]
-    type = ProjectionAux
-    variable = q_prime
-    v = q_prime_const
-    execute_on = 'initial timestep_begin'
-  []
 []
 
 [Postprocessors]
@@ -183,6 +171,11 @@ mass_flux_in = ${fparse total_mdot / flow_area}
     type = SCMPlanarMean
     variable = T
     height = ${fparse height * 1e-2}
+  []
+  [expected_dT]
+    type = ParsedPostprocessor
+    expression = 'power/${total_mdot}/${Cp}'
+    pp_names = 'power'
   []
 []
 
