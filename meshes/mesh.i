@@ -10,7 +10,9 @@
     polygon_size = ${fparse 0.5 * pin_pitch * 1e-2}
 
     ring_block_ids = '0 1 0 2'
+    ring_block_names = 'helium fuel helium clad'
     background_block_ids = '3'
+    background_block_names = 'sodium'
     quad_center_elements = true
   []
   [assembly]
@@ -26,11 +28,9 @@
               0 0 0 0 0 0;
                0 0 0 0 0'
     hexagon_size = ${fparse assembly_pitch * 1e-2/2}
-    duct_sizes = '${fparse duct_inner_flat_to_flat * 1e-2/2} ${fparse duct_outer_flat_to_flat*1e-2/2}'
-    duct_intervals = '1 1'
-    duct_sizes_style = 'apothem'
-    #duct_block_ids = '${b_spacer_inc} ${b_spacer_zr}'
-    uniform_mesh_on_sides = true
+    background_block_id = '3'
+    background_block_name = 'sodium'
+    rotate_angle = 60
   []
   [extrude]
     type = AdvancedExtruderGenerator
