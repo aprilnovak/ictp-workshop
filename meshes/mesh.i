@@ -27,7 +27,7 @@
              0 0 0 0 0 0 0;
               0 0 0 0 0 0;
                0 0 0 0 0'
-    hexagon_size = ${fparse assembly_pitch * 1e-2/2}
+    hexagon_size = ${fparse duct_inner_flat_to_flat * 1e-2/2}
     background_block_id = '3'
     background_block_name = 'sodium'
     rotate_angle = 60

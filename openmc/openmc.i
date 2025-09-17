@@ -12,20 +12,14 @@
   power = ${power}
   lowest_cell_level = 2
   scaling = 100
-  verbose = true
-  normalize_by_global_tally = false
 
   temperature_blocks = 'helium fuel clad sodium'
   density_blocks = 'sodium'
-  initial_properties = xml
 
   [Tallies]
     [power]
       type = CellTally
       score = 'kappa_fission'
-
-      #type = MeshTally
-      #mesh_template = '../meshes/mesh_in.e'
     []
   []
 []
@@ -34,12 +28,34 @@
   [temp]
     type = ConstantIC
     variable = temp
-    value = 700.0
+    value = ${inlet_temperature}
   []
   [density]
     type = ConstantIC
     variable = density
-    value = 9000
+    value = ${fparse 1.00423e3 + -0.21390*inlet_temperature+-1.1046e-5*inlet_temperature^2}
+  []
+[]
+
+[AuxVariables]
+  [cell_temperature]
+    family = MONOMIAL
+    order = CONSTANT
+  []
+  [cell_density]
+    family = MONOMIAL
+    order = CONSTANT
+  []
+[]
+
+[AuxKernels]
+  [cell_temperature]
+    type = CellTemperatureAux
+    variable = cell_temperature
+  []
+  [cell_density]
+    type = CellDensityAux
+    variable = cell_density
   []
 []
 

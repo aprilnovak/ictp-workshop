@@ -56,6 +56,11 @@
     initial_condition = ${inlet_temperature}
   []
   [heat_source]
+    # OpenMC computes the variable as constant monomial, so we can receive the
+    # field into exactly the same type here (not required, but this will be clearer to
+    # visualize in paraview)
+    family = MONOMIAL
+    order = CONSTANT
     initial_condition = 1e8
     block = 'fuel'
   []
@@ -64,6 +69,13 @@
     order = CONSTANT
     initial_condition = 0.0
     block = 'fuel'
+  []
+[]
+
+[Functions]
+  [axial]
+    type = ParsedFunction
+    value = '${inlet_temperature}+z/${fparse height*1e-2}*(${outlet_temperature}-${inlet_temperature})'
   []
 []
 
@@ -76,12 +88,21 @@
   []
 []
 
+[Executioner]
+  type = Transient
+[]
+
 [AuxKernels]
   [q_prime]
     type = SpatialUserObjectAux
     variable = q_prime
     user_object = q_prime_uo
     block = 'fuel'
+  []
+  [T_wall]
+    type = FunctionAux
+    variable = T_wall
+    function = axial
   []
 []
 
@@ -96,10 +117,15 @@
   []
 []
 
-[Executioner]
-  type = Steady
-[]
-
 [Outputs]
   exodus = true
+[]
+
+[Postprocessors]
+  [conduction_power_integral]
+    type = ElementIntegralVariablePostprocessor
+    variable = heat_source
+    block = 'fuel'
+    execute_on = 'transfer'
+  []
 []

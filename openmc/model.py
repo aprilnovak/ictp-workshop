@@ -163,10 +163,13 @@ model.geometry = openmc.Geometry(root)
 #                   Exporting to OpenMC settings.xml file
 ###############################################################################
 
-# Instantiate a Settings object, set all runtime parameters, and export to XML
+# Instantiate a Settings object, set all runtime parameters, and export to XML. Note
+# that the choices for batches and particles are VERY low, and are only selected as
+# these choices to get a fast-running model
 model.settings.batches   = 120
 model.settings.inactive  = 20
 model.settings.particles = 1000
+
 model.settings.ptables   = True
 model.settings.temperature['method']='interpolation'
 model.settings.temperature['range'] = (300.0, 3000.0)
