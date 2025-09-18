@@ -115,9 +115,9 @@ clad_inner_surface  = openmc.ZCylinder(x0=0, y0=0, r=specs.inner_clad_diameter/2
 clad_outer_surface  = openmc.ZCylinder(x0=0, y0=0, r=specs.outer_clad_diameter/2.0)
 
 # Define the surfaces needed for the various hexagons enclosing the assembly
-hex_WR_IN    = openmc.model.HexagonalPrism(orientation='y', origin=(0.0, 0.0), edge_length=specs.duct_inner_flat_to_flat/math.sqrt(3))
-hex_WR_OU    = openmc.model.HexagonalPrism(orientation='y', origin=(0.0, 0.0), edge_length=specs.duct_outer_flat_to_flat/math.sqrt(3.))
-hex_SA_PITCH = openmc.model.HexagonalPrism(orientation='y', origin=(0.0, 0.0), edge_length=specs.assembly_pitch/math.sqrt(3.), boundary_type='reflective')
+hex_WR_IN    = openmc.model.HexagonalPrism(orientation='x', origin=(0.0, 0.0), edge_length=specs.duct_inner_flat_to_flat/math.sqrt(3))
+hex_WR_OU    = openmc.model.HexagonalPrism(orientation='x', origin=(0.0, 0.0), edge_length=specs.duct_outer_flat_to_flat/math.sqrt(3.))
+hex_SA_PITCH = openmc.model.HexagonalPrism(orientation='x', origin=(0.0, 0.0), edge_length=specs.assembly_pitch/math.sqrt(3.), boundary_type='reflective')
 
 # define axial surfaces which will bound the active fissile region
 lower = openmc.ZPlane(z0=0.0, boundary_type='vacuum')
@@ -138,6 +138,7 @@ sodium_universe = openmc.Universe(cells=[openmc.Cell(fill=sodium)])
 # create a lattice for a fuel assembly, consisting of 61 fuel pins
 axial_pitch = specs.height / specs.n_layers
 fuel_pin_lattice = openmc.HexLattice()
+fuel_pin_lattice.orientation = 'x'
 fuel_pin_lattice.center = [0., 0., specs.height/2]
 fuel_pin_lattice.pitch  = [specs.pin_pitch, axial_pitch]
 
@@ -147,7 +148,6 @@ for i in range(specs.n_layers):
   axial.append(each_layer)
 
 fuel_pin_lattice.universes = axial
-
 
 # put that fuel pin lattice inside a hexagon boundary, then add additional hexagons
 # to represent the duct. For each, place inside the axial extents
@@ -163,12 +163,17 @@ model.geometry = openmc.Geometry(root)
 #                   Exporting to OpenMC settings.xml file
 ###############################################################################
 
-# Instantiate a Settings object, set all runtime parameters, and export to XML
+# Instantiate a Settings object, set all runtime parameters, and export to XML. Note
+# that the choices for batches and particles are VERY low, and are only selected as
+# these choices to get a fast-running model
 model.settings.batches   = 120
 model.settings.inactive  = 20
 model.settings.particles = 1000
+
 model.settings.ptables   = True
 model.settings.temperature['method']='interpolation'
+model.settings.temperature['range'] = (300.0, 3000.0)
+model.settings.temperature['default'] = 0.5 * (specs.inlet_temperature + specs.outlet_temperature)
 
 # Create an initial uniform spatial source distribution over fissionable zones
 l = specs.assembly_pitch
