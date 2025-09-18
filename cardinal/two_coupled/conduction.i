@@ -75,7 +75,7 @@
 [Functions]
   [axial]
     type = ParsedFunction
-    value = '${inlet_temperature}+z/${fparse height*1e-2}*(${outlet_temperature}-${inlet_temperature})'
+    expression = '${inlet_temperature}+z/${fparse height*1e-2}*(${outlet_temperature}-${inlet_temperature})'
   []
 []
 
