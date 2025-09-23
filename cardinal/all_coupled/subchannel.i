@@ -160,7 +160,7 @@ mass_flux_in = ${fparse total_mdot / flow_area}
 
 [Postprocessors]
   [power]
-    type = SCMPowerPostprocessor
+    type = SCMPinPowerPostprocessor
   []
   [inlet_temp]
     type = SCMPlanarMean
