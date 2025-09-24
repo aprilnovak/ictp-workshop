@@ -113,8 +113,25 @@
     block = 'fuel'
     execute_on = 'transfer'
   []
+  [max_fuel_temp]
+    type = ElementExtremeValue
+    variable = T
+  []
 []
 
 [Outputs]
   exodus = true
+  csv = true
 []
+
+[VectorPostprocessors]
+  [T]
+    type = LineValueSampler
+    start_point = '0 0 0'
+    end_point = '0 0 ${fparse height*1e-2}'
+    num_points = 30
+    variable = T
+    sort_by = 'z'
+  []
+[]
+

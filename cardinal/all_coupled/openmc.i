@@ -144,4 +144,7 @@
     variable = kappa_fission
     execute_on = 'transfer timestep_end'
   []
+  [k]
+    type = KEigenvalue
+  []
 []
